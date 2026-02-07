@@ -1,4 +1,5 @@
 <?php
+$base = "https://backend-portfolio-production-4891.up.railway.app";
 $profile = json_decode(file_get_contents("http://localhost:3000/api/profile"),true);
 $skills = json_decode(file_get_contents("http://localhost:3000/api/skills"),true);
 $projects = json_decode(file_get_contents("http://localhost:3000/api/projects"),true);
