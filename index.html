@@ -1,10 +1,3 @@
-<?php
-$base = "https://backend-portfolio-production-4891.up.railway.app";
-$profile = json_decode(file_get_contents("http://localhost:3000/api/profile"),true);
-$skills = json_decode(file_get_contents("http://localhost:3000/api/skills"),true);
-$projects = json_decode(file_get_contents("http://localhost:3000/api/projects"),true);
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,11 +79,11 @@ body::before{
 <div id="particles-js" class="fixed inset-0 -z-10"></div>
 <!-- NAVBAR -->
 <nav class="sticky top-0 backdrop-blur-md bg-white/10 border-b border-white/10 flex justify-between px-10 py-5">
-  <h1 class="text-xl font-bold text-blue-400">Pure Portfolio</h1>
+  <h1 class="text-xl font-bold text-blue-400">Portofolio Murni</h1>
   <div class="space-x-6 text-gray-300">
-    <a href="#" class="hover:text-blue-400">Home</a>
-    <a href="#skills" class="hover:text-blue-400">Skills</a>
-    <a href="#hobby" class="hover:text-blue-400 transition">Hobby</a>
+    <a href="#" class="hover:text-blue-400">Beranda</a>
+    <a href="#skills" class="hover:text-blue-400">Keahlian</a>
+    <a href="#hobby" class="hover:text-blue-400 transition">Hobi</a>
   </div>
 </nav>
 
@@ -100,20 +93,19 @@ body::before{
   <!-- LEFT -->
   <div>
     <h2 class="text-4xl font-bold mb-3">
-      Hi, I'm <?= $profile['name'] ?>
+      Hi, I'm <span id="profile-name"></span>
     </h2>
 
     <h3 class="text-3xl text-blue-400 mb-4">
   <span id="typing"></span>
     </h3>
 
-    <p class="text-gray-400 leading-relaxed">
-      <?= $profile['bio'] ?>
+    <p class="text-gray-400 leading-relaxed" id="profile-bio">
     </p>
 
     <div class="mt-6 space-x-4">
       <button class="bg-blue-500 px-6 py-2 rounded hover:bg-blue-600">
-        Contact Me
+        Hubungi Saya
       </button>
     </div>
     <div class="flex gap-6 mt-6 justify-center md:justify-start">
@@ -160,27 +152,14 @@ body::before{
 
 <!-- SKILLS -->
 <section id="skills" class="max-w-5xl mx-auto py-16 px-6 text-center">
-  <h2 class="text-3xl font-bold mb-10">My Expertise</h2>
+  <h2 class="text-3xl font-bold mb-10">Keahlian Saya</h2>
 
-  <div class="grid md:grid-cols-3 gap-8">
-
-  <?php foreach($skills as $s): ?>
-    <div class="tilt bg-[#1e293b] p-6 rounded-lg">
-      <h3 class="text-xl mb-4"><?= $s['skill_name'] ?></h3>
-
-      <div class="w-full bg-gray-700 h-3 rounded">
-        <div class="bg-blue-500 h-3 rounded w-[80%]"></div>
-      </div>
-
-      <p class="text-sm text-gray-400 mt-2">80%</p>
-    </div>
-  <?php endforeach; ?>
-
+  <div id="skills-container" class="grid md:grid-cols-3 gap-8">
   </div>
 </section>
 <!-- HOBBY -->
 <section id="hobby" class="relative py-20 overflow-hidden">
-  <h2 class="text-4xl font-bold text-center mb-10">My Hobbies</h2>
+  <h2 class="text-4xl font-bold text-center mb-10">Hobi Saya</h2>
 
   <div class="grid md:grid-cols-3 gap-8">
 
@@ -239,16 +218,49 @@ body::before{
 </section>
 
 <script>
+// Static data for frontend only
+const profile = {
+  name: "Andhika Raditya",
+  bio: "Saya adalah seorang web developer yang passionate dengan teknologi dan desain. Saya suka membuat aplikasi yang user-friendly dan estetis, serta memiliki kemampuan dalam berbagai bahasa pemrograman dan framework modern."
+};
+
+const skills = [
+  { skill_name: "HTML/CSS", level: 90 },
+  { skill_name: "JavaScript", level: 85 },
+  { skill_name: "PHP", level: 80 },
+  { skill_name: "React", level: 75 },
+  { skill_name: "Node.js", level: 70 },
+  { skill_name: "Python", level: 65 }
+];
+
+// Populate profile
+document.getElementById('profile-name').innerText = profile.name;
+document.getElementById('profile-bio').innerText = profile.bio;
+
+// Populate skills
+const skillsContainer = document.getElementById('skills-container');
+skills.forEach(skill => {
+  const skillDiv = document.createElement('div');
+  skillDiv.className = 'tilt bg-[#1e293b] p-6 rounded-lg hover:bg-[#334155] transition duration-300';
+  skillDiv.innerHTML = `
+    <h3 class="text-xl mb-4">${skill.skill_name}</h3>
+    <div class="w-full bg-gray-700 h-3 rounded">
+      <div class="bg-blue-500 h-3 rounded" style="width: ${skill.level}%"></div>
+    </div>
+    <p class="text-sm text-gray-400 mt-2">${skill.level}%</p>
+  `;
+  skillsContainer.appendChild(skillDiv);
+});
+
+// Typed.js
 new Typed("#typing", {
   strings: ["Web Developer UI/UX","Sing ganteng dewe","Ganok Tunggale"],
   typeSpeed: 80,
   backSpeed: 50,
   loop: true
 });
-</script>
-<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
 
-<script>
+// Particles.js
 particlesJS("particles-js", {
   particles: {
     number: { value: 100 },
@@ -291,8 +303,8 @@ particlesJS("particles-js", {
   },
   retina_detect: true
 });
-</script>
-<script>
+
+// ScrollReveal
 ScrollReveal().reveal("section", {
   distance: "60px",
   duration: 1500,
@@ -300,8 +312,8 @@ ScrollReveal().reveal("section", {
   interval: 200,
   reset: false
 });
-</script>
-<script>
+
+// Parallax
 window.addEventListener("scroll", function(){
   const parallax = document.querySelector(".parallax");
   let offset = window.pageYOffset;
